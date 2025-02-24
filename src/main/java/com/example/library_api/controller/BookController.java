@@ -6,7 +6,7 @@ import com.example.library_api.service.BookService;
 import com.example.library_api.model.Book;
 
 @RestController
-@RequestMapping("/books") // API base path
+@RequestMapping("/book") // API base path
 public class BookController {
 
     private final BookService bookService;
@@ -19,7 +19,7 @@ public class BookController {
     public List<Book> getAllBooks() {
         return bookService.getAllBooks();
     }
-
+/* 
     @GetMapping("/search")
     public List<Book> getBookByAuthor(@PathVariable String author) {
         return bookService.getBooksByAuthor(author);
@@ -32,13 +32,13 @@ public class BookController {
     public List<Book> getBookByTitle(@PathVariable String title) {
         return bookService.getBooksByTitle(title);
     }
-
+*/
     @PostMapping
     public Book addBook(@RequestBody Book book) {
         return bookService.addBook(book);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{book_id}")
     public void deleteBook(@PathVariable int id) {
         bookService.deleteBook(id);
     }

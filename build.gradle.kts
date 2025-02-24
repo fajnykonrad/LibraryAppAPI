@@ -22,7 +22,8 @@ dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	implementation ("mysql:mysql-connector-java:8.0.23")
+	implementation ("mysql:mysql-connector-java:8.0.33")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
 	implementation("org.hibernate:hibernate-core:6.3.1.Final")
 

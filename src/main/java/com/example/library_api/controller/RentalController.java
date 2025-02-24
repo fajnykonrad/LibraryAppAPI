@@ -7,7 +7,7 @@ import com.example.library_api.service.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
-@RequestMapping("/rentals") // Base path for rental-related API requests
+@RequestMapping("/rental") // Base path for rental-related API requests
 public class RentalController {
 
     private final RentalService rentalService;
@@ -22,19 +22,9 @@ public class RentalController {
         return rentalService.getAllRentals();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{rental_id}")
     public Rental getRentalById(@PathVariable int id) {
         return rentalService.getSupervisorByRental(id);
-    }
-
-    @GetMapping("/search")
-    public List<Rental> getRentalsByTitle(@RequestParam String title) {
-        return rentalService.getRentalsByTitle(title);
-    }
-
-    @GetMapping("/search")
-    public List<Rental> getRentalsByUser(@RequestParam String username) {
-        return rentalService.getRentalsByUser(username);
     }
 
     @PostMapping
@@ -42,8 +32,7 @@ public class RentalController {
         return rentalService.addRental(rental);
     }
 
-    // 📌 Delete a rental by ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{rental_id}")
     public void deleteRental(@PathVariable int id) {
         rentalService.deleteRental(id);
     }

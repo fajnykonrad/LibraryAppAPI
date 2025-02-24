@@ -7,7 +7,7 @@ import com.example.library_api.service.SupervisorService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
-@RequestMapping("/supervisors") // Base path for supervisor-related API requests
+@RequestMapping("/supervisor") // Base path for supervisor-related API requests
 public class SupervisorController {
 
     private final SupervisorService supervisorService;
@@ -22,11 +22,11 @@ public class SupervisorController {
         return supervisorService.getAllSupervisors();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{supervisor_id}")
     public Supervisor getSupervisorById(@PathVariable int id) {
         return supervisorService.getSupervisorById(id);
     }
-
+/* 
     @GetMapping("/search")
     public List<Supervisor> getSupervisorByMail(@RequestParam String mail) {
         return supervisorService.getSupervisorByMail(mail);
@@ -36,13 +36,13 @@ public class SupervisorController {
     public List<Supervisor> getSupervisorByName(@RequestParam String name) {
         return supervisorService.getSupervisorByName(name);
     }
-
+*/
     @PostMapping
     public Supervisor addSupervisor(@RequestBody Supervisor supervisor) {
         return supervisorService.addSupervisor(supervisor);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{supervisor_id}")
     public void deleteSupervisor(@PathVariable int id) {
         supervisorService.deleteSupervisor(id);
     }

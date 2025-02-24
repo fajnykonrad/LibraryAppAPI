@@ -3,10 +3,12 @@ package com.example.library_api.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.library_api.model.Rental;
 import com.example.library_api.repository.RentalRepository;
 
+@Service
 public class RentalService {
     @Autowired
     private RentalRepository rentalRepository;
@@ -17,13 +19,6 @@ public class RentalService {
 
     public Rental getSupervisorByRental(int id) {
         return rentalRepository.findById(id).orElse(null);
-    }
-
-    public List<Rental> getRentalsByTitle(String title) {
-        return rentalRepository.findByTitleContainingIgnoreCase(title);
-    }
-    public List<Rental> getRentalsByUser(String username) {
-        return rentalRepository.findByUserContainingIgnoreCase(username);
     }
 
     public Rental addRental(Rental rental) {

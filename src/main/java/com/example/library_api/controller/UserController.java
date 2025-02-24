@@ -7,7 +7,7 @@ import com.example.library_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
-@RequestMapping("/users") // Base path for user-related API requests
+@RequestMapping("/user") // Base path for user-related API requests
 public class UserController {
 
     private final UserService userService;
@@ -22,11 +22,11 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{user_id}")
     public User getUserById(@PathVariable int id) {
         return userService.getUserById(id);
     }
-
+/* 
     @GetMapping("/search/mail")
     public List<User> getUserByMail(@RequestParam String mail) {
         return userService.getUserByMail(mail);
@@ -36,13 +36,13 @@ public class UserController {
     public List<User> getUserByName(@RequestParam String name) {
         return userService.getUserByName(name);
     }
-
+*/
     @PostMapping
     public User addUser(@RequestBody User user) {
         return userService.addUser(user);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{user_id}")
     public void deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
     }
