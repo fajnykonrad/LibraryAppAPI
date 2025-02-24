@@ -1,5 +1,6 @@
 package com.example.library_api.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,7 @@ public class Library {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "library_id")
     private int id;
 
     private String name;
@@ -27,7 +29,8 @@ public class Library {
     @OneToMany(mappedBy = "library")
     private List<Supervisor> supervisors;
     // Getters and setters
-
+    public Library() {
+    }
     public Library(String name, String admin_mail, String admin_password) {
         this.name = name;
         this.admin_mail = admin_mail;
