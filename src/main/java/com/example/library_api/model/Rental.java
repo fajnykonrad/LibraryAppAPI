@@ -2,6 +2,8 @@ package com.example.library_api.model;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,16 +25,20 @@ public class Rental {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "supervisor_id")
+    @JsonBackReference
     private Supervisor supervisor;
 
     @ManyToOne
     @JoinColumn(name = "book_id")
+    @JsonBackReference
     private Book book;
     // Getters and setters
+    public Rental() {}
     public Rental(Date end_date, User user, Supervisor supervisor, Book book) {
         this.end_date = end_date;
         this.user = user;
@@ -63,4 +69,5 @@ public class Rental {
     public Book getBook() {
         return book;
     }
+    
 }

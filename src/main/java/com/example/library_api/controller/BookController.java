@@ -1,5 +1,6 @@
 package com.example.library_api.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import com.example.library_api.service.BookService;
@@ -34,8 +35,9 @@ public class BookController {
     }
 */
     @PostMapping
-    public Book addBook(@RequestBody Book book) {
-        return bookService.addBook(book);
+    public ResponseEntity<Book> addBook(@RequestParam int libraryId, @RequestParam String title) {
+        Book newBook = bookService.addBook(libraryId, title);
+        return ResponseEntity.ok(newBook);
     }
 
     @DeleteMapping("/{book_id}")

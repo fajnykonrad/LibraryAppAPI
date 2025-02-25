@@ -24,6 +24,7 @@ public class Book {
     private String cover_picture;
     private String book_condition;
 
+
     @ManyToOne
     @JoinColumn(name = "library_id")
     @JsonBackReference
@@ -80,4 +81,5 @@ public class Book {
     public Library getLibrary() {
         return library;
     }
+    
 }

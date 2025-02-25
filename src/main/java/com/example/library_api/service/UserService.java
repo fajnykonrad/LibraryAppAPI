@@ -5,21 +5,28 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.library_api.model.Book;
+import com.example.library_api.model.Library;
 import com.example.library_api.model.User;
+import com.example.library_api.repository.LibraryRepository;
 import com.example.library_api.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final LibraryRepository libraryRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, LibraryRepository libraryRepository) {
         this.userRepository = userRepository;
+        this.libraryRepository = libraryRepository;
     }
 
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findByIsDeletedFalse();
     }
 
     public User getUserById(int id) {
@@ -34,11 +41,19 @@ public class UserService {
         return userRepository.findByNameContainingIgnoreCase(name);
     }
 */
-    public User addUser(User user) {
+    public User addUser(int libraryId, String name, String mail) {
+        Library library = libraryRepository.findById(libraryId)
+                .orElseThrow(() -> new RuntimeException("Library not found"));
+
+        User user = new User(name, mail , library);
         return userRepository.save(user);
     }
-
-    public void deleteUser(int id) {
-        userRepository.deleteById(id);
+    @Transactional
+    public boolean softDeleteUserById(int id) {
+        if (!userRepository.existsById(id)) {
+            return false;
+        }
+        userRepository.softDeleteUser(id); 
+        return true; 
     }
 }

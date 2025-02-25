@@ -1,5 +1,7 @@
 package com.example.library_api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,12 +21,18 @@ public class User {
     private String name;
     private String mail;
     private int penalties;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "library_id")
+    @JsonBackReference
     private Library library;
     // Getters and setters
-    public User(String name, String mail, int penalties, Library library) {
+
+    public User() {
+    }
+    public User(String name, String mail, Library library) {
         this.name = name;
         this.mail = mail;
         this.library = library;
@@ -61,4 +69,11 @@ public class User {
     public Library getLibrary() {
         return library;
     }
-}
+    public boolean getStatus() {
+        return isDeleted;
+    }
+
+    public void setStatus(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+}   

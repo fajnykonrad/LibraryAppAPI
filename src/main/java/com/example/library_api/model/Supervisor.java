@@ -1,5 +1,7 @@
 package com.example.library_api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,12 +21,16 @@ public class Supervisor {
     private String name;
     private String mail;
     private String password;
+
     
 
     @ManyToOne
     @JoinColumn(name = "library_id")  // Foreign key to Publisher
+    @JsonBackReference
     private Library library;
     // Getters and setters
+    public Supervisor() {}
+        
     public Supervisor(String name, String mail, String password, Library library) {
         this.name = name;
         this.mail = mail;
@@ -63,4 +69,5 @@ public class Supervisor {
     public Library getLibrary() {
         return library;
     }
+    
 }

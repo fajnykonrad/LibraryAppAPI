@@ -20,6 +20,7 @@ public class Library {
     private String admin_mail;
     private String admin_password;
 
+
     @OneToMany(mappedBy = "library")
     private List<Book> books;
 
@@ -88,4 +89,5 @@ public class Library {
     public void setSupervisors(List<Supervisor> supervisors) {
         this.supervisors = supervisors;
     }
+    
 }
