@@ -37,7 +37,10 @@ public class User {
         this.mail = mail;
         this.library = library;
     }
-
+    public User(String name, String mail) {
+        this.name = name;
+        this.mail = mail;
+    }
     public int getId() {
         return id;
     }
@@ -68,6 +71,9 @@ public class User {
 
     public Library getLibrary() {
         return library;
+    }
+    public void setLibrary(Library library) {
+        this.library = library;
     }
     public boolean getStatus() {
         return isDeleted;

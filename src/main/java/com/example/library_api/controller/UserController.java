@@ -4,7 +4,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import com.example.library_api.model.Book;
+import com.example.library_api.model.Library;
 import com.example.library_api.model.User;
+import com.example.library_api.repository.LibraryRepository;
+import com.example.library_api.request.UserRequest;
+import com.example.library_api.service.LibraryService;
 import com.example.library_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,9 +46,10 @@ public class UserController {
     }
 */
    @PostMapping
-    public ResponseEntity<User> addUser(@RequestParam int libraryId, @RequestParam String name, @RequestParam String mail) {
-        User newUser = userService.addUser(libraryId, name, mail);
-        return ResponseEntity.ok(newUser);
+    public ResponseEntity<User> addUser(@RequestBody UserRequest userRequest){
+        User createdUser = userService.addUser(userRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+
     }
 
     @DeleteMapping("/{user_id}")

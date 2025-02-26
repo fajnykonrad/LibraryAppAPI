@@ -10,6 +10,7 @@ import com.example.library_api.model.Library;
 import com.example.library_api.model.User;
 import com.example.library_api.repository.LibraryRepository;
 import com.example.library_api.repository.UserRepository;
+import com.example.library_api.request.UserRequest;
 
 import jakarta.transaction.Transactional;
 
@@ -41,11 +42,13 @@ public class UserService {
         return userRepository.findByNameContainingIgnoreCase(name);
     }
 */
-    public User addUser(int libraryId, String name, String mail) {
-        Library library = libraryRepository.findById(libraryId)
+    public User addUser(UserRequest userRequest) {
+        Library library = libraryRepository.findById(userRequest.getLibraryId())
                 .orElseThrow(() -> new RuntimeException("Library not found"));
 
-        User user = new User(name, mail , library);
+        User user = userRequest.getUser();
+        user.setLibrary(library);
+
         return userRepository.save(user);
     }
     @Transactional
