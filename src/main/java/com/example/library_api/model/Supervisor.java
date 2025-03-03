@@ -21,6 +21,7 @@ public class Supervisor {
     private String name;
     private String mail;
     private String password;
+    private boolean is_admin;
 
     
 
@@ -31,11 +32,12 @@ public class Supervisor {
     // Getters and setters
     public Supervisor() {}
         
-    public Supervisor(String name, String mail, String password, Library library) {
+    public Supervisor(String name, String mail, String password, Library library, boolean is_admin) {
         this.name = name;
         this.mail = mail;
         this.password = password;
         this.library = library;
+        this.is_admin = is_admin;
     }
 
     public int getId() {
@@ -65,7 +67,12 @@ public class Supervisor {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    public boolean getIsAdmin() {
+        return is_admin;
+    }
+    public void setIsAdmin(boolean is_admin) {
+        this.is_admin = is_admin;
+    }
     public Library getLibrary() {
         return library;
     }

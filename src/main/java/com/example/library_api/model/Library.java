@@ -17,8 +17,6 @@ public class Library {
     private int id;
 
     private String name;
-    private String admin_mail;
-    private String admin_password;
 
 
     @OneToMany(mappedBy = "library")
@@ -34,8 +32,6 @@ public class Library {
     }
     public Library(String name, String admin_mail, String admin_password) {
         this.name = name;
-        this.admin_mail = admin_mail;
-        this.admin_password = admin_password;
     }
 
     public int getId() {
@@ -48,22 +44,6 @@ public class Library {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAdmin_mail() {
-        return admin_mail;
-    }
-
-    public void setAdmin_mail(String admin_mail) {
-        this.admin_mail = admin_mail;
-    }
-
-    public String getAdmin_password() {
-        return admin_password;
-    }
-
-    public void setAdmin_password(String admin_password) {
-        this.admin_password = admin_password;
     }
 
     public List<Book> getBooks() {
