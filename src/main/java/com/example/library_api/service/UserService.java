@@ -10,7 +10,7 @@ import com.example.library_api.model.Library;
 import com.example.library_api.model.User;
 import com.example.library_api.repository.LibraryRepository;
 import com.example.library_api.repository.UserRepository;
-import com.example.library_api.request.UserRequest;
+import com.example.library_api.request.UserRequestDTO;
 
 import jakarta.transaction.Transactional;
 
@@ -42,7 +42,7 @@ public class UserService {
         return userRepository.findByNameContainingIgnoreCase(name);
     }
 */
-    public User addUser(UserRequest userRequest) {
+    public User addUser(UserRequestDTO userRequest) {
         Library library = libraryRepository.findById(userRequest.getLibraryId())
                 .orElseThrow(() -> new RuntimeException("Library not found"));
 

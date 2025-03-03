@@ -21,29 +21,12 @@ public class BookService {
         this.bookRepository = bookRepository;
         this.libraryRepository = libraryRepository;
     }
-
-    // Get all books
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
-
-    /*  Get books by author
-    public List<Book> getBooksByAuthor(String author) {
-        return bookRepository.findByAuthorContainingIgnoreCase(author);
-    }
-    public List<Book> getBooksByTitle(String title) {
-        return bookRepository.findByTitleContainingIgnoreCase(title);
-    }
-    public List<Book> getBooksByIsbn(String isbn) {
-        return bookRepository.findByIsbn(isbn);
-    }
-    */
     public Book getBookById(int id) {
         return bookRepository.findById(id).orElse(null);
     }
-
-
-    // Delete a book by ID
     public void deleteBook(int id) {
         bookRepository.deleteById(id);
     }

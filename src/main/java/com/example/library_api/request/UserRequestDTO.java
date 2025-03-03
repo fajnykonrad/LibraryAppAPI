@@ -2,15 +2,15 @@ package com.example.library_api.request;
 
 import com.example.library_api.model.User;
 
-public class UserRequest {
+public class UserRequestDTO {
     
     private User user;
     private int libraryId;  
 
     // Constructors
-    public UserRequest() {}
+    public UserRequestDTO() {}
 
-    public UserRequest(String name, String email, int libraryId) {
+    public UserRequestDTO(String name, String email, int libraryId) {
         
     }
 
