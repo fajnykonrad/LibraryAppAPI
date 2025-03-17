@@ -11,15 +11,9 @@ import com.example.library_api.model.User;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    // Get all users that are not marked as deleted
-    List<User> findByIsDeletedFalse();
-
-    // Update user as deleted (soft delete)
-    @Modifying
-    @Transactional
-    @Query("UPDATE User u SET u.isDeleted = true WHERE u.id = :id")
-    void softDeleteUser(@Param("id") int id);
+    Optional<User> findByMail(String mail);
 }

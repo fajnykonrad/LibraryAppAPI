@@ -1,85 +1,50 @@
 package com.example.library_api.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private int id;
 
     private String name;
+    
+    @Column(unique = true)
     private String mail;
-    private int penalties;
-    @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private String password;
+    private boolean is_deleted;
 
-    @ManyToOne
-    @JoinColumn(name = "library_id")
-    @JsonBackReference
-    private Library library;
-    // Getters and setters
 
-    public User() {
-    }
-    public User(String name, String mail, Library library) {
+    public User() {}
+
+    public User(String name, String email) {
         this.name = name;
-        this.mail = mail;
-        this.library = library;
+        this.mail = email;
     }
-    public User(String name, String mail) {
-        this.name = name;
-        this.mail = mail;
-    }
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public int getPenalties() {
-        return penalties;
-    }
-
-    public void addPenalty() {
-        this.penalties++;
-    }
-
-    public Library getLibrary() {
-        return library;
-    }
-    public void setLibrary(Library library) {
-        this.library = library;
-    }
-    public boolean getStatus() {
-        return isDeleted;
-    }
-
-    public void setStatus(boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
+    // Getters and Setters
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getMail() { return mail; }
+    public void setMail(String email) { this.mail = email; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }   

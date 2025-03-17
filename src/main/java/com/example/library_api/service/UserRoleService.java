@@ -1,0 +1,74 @@
+package com.example.library_api.service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.library_api.model.Library;
+import com.example.library_api.model.Role;
+import com.example.library_api.model.User;
+import com.example.library_api.model.UserRole;
+import com.example.library_api.repository.LibraryRepository;
+import com.example.library_api.repository.UserRepository;
+import com.example.library_api.repository.UserRoleRepository;
+import com.example.library_api.request.UserRequestDTO;
+
+import jakarta.transaction.Transactional;
+
+@Service
+public class UserRoleService {
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private LibraryRepository libraryRepository;
+
+    public List<User> getUsersByRole(int libraryId, Role role) {
+        Library library = libraryRepository.findById(libraryId)
+                .orElseThrow(() -> new RuntimeException("Library not found"));
+        return userRoleRepository.findUsersByLibraryAndRole(library, role);
+    }
+
+    public List<User> getUsersInLibrary(int libraryId) {
+        Library library = libraryRepository.findById(libraryId)
+                .orElseThrow(() -> new RuntimeException("Library not found"));
+        return userRoleRepository.findUsersInLibrary(library);
+    }
+
+    @Transactional
+    public void addUserToLibrary(UserRequestDTO userRequest) {
+        User user = userRepository.findByMail(userRequest.getUser().getMail())
+                .orElseGet(() -> userRepository.save(userRequest.getUser()));
+
+        Library library = libraryRepository.findById(userRequest.getLibraryId())
+                .orElseThrow(() -> new RuntimeException("Library not found"));
+
+        userRoleRepository.findByUserAndLibrary(user, library)
+                .ifPresentOrElse(
+                        existingRole -> {
+                            existingRole.setRole(userRequest.getRole());
+                            userRoleRepository.save(existingRole);
+                        },
+                        () -> userRoleRepository.save(new UserRole(user, library, userRequest.getRole()))
+                );
+    }
+
+    @Transactional
+    public void removeUserFromLibrary(int libraryId, int userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Library library = libraryRepository.findById(libraryId)
+                .orElseThrow(() -> new RuntimeException("Library not found"));
+
+        userRoleRepository.findByUserAndLibrary(user, library)
+                .ifPresent(userRoleRepository::delete);
+    }
+}
