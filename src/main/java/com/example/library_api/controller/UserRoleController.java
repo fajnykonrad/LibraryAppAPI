@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.library_api.model.Role;
 import com.example.library_api.model.User;
 import com.example.library_api.repository.UserRepository;
+import com.example.library_api.request.AddUserRequestDTO;
 import com.example.library_api.request.UserRequestDTO;
 import com.example.library_api.service.UserRoleService;
 import com.example.library_api.service.UserService;
@@ -37,12 +38,12 @@ public class UserRoleController {
     }
 
     @PostMapping("/{libraryId}/users")
-    public ResponseEntity<String> addUserToLibrary(@RequestBody UserRequestDTO userRequest) {
-        userRoleService.addUserToLibrary(userRequest);
+    public ResponseEntity<String> addUserToLibrary(@RequestBody AddUserRequestDTO addUserRequest) {
+        userRoleService.addUserToLibrary(addUserRequest);
         return ResponseEntity.ok("User added successfully.");
     }
 
-    @DeleteMapping("/{libraryId}/users/{userId})")
+    @DeleteMapping("/{libraryId}/users/{userId}")
     public ResponseEntity<String> removeUserFromLibrary(
             @PathVariable int libraryId,
             @PathVariable int userId) {

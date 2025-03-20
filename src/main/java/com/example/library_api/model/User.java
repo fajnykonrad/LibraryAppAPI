@@ -35,9 +35,10 @@ public class User {
 
     public User() {}
 
-    public User(String name, String email) {
+    public User(String name, String mail, String password) {
         this.name = name;
-        this.mail = email;
+        this.mail = mail;
+        this.password = password;
     }
     // Getters and Setters
     public int getId() { return id; }

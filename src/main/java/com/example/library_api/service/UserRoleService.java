@@ -14,6 +14,7 @@ import com.example.library_api.model.UserRole;
 import com.example.library_api.repository.LibraryRepository;
 import com.example.library_api.repository.UserRepository;
 import com.example.library_api.repository.UserRoleRepository;
+import com.example.library_api.request.AddUserRequestDTO;
 import com.example.library_api.request.UserRequestDTO;
 
 import jakarta.transaction.Transactional;
@@ -43,20 +44,20 @@ public class UserRoleService {
     }
 
     @Transactional
-    public void addUserToLibrary(UserRequestDTO userRequest) {
-        User user = userRepository.findByMail(userRequest.getUser().getMail())
-                .orElseGet(() -> userRepository.save(userRequest.getUser()));
+    public void addUserToLibrary(AddUserRequestDTO addUserRequest) {
+        User user = userRepository.findByMail(addUserRequest.getMail())
+                .orElseThrow(() -> new RuntimeException("User not found")) ;
 
-        Library library = libraryRepository.findById(userRequest.getLibraryId())
+        Library library = libraryRepository.findById(addUserRequest.getLibraryId())
                 .orElseThrow(() -> new RuntimeException("Library not found"));
 
         userRoleRepository.findByUserAndLibrary(user, library)
                 .ifPresentOrElse(
                         existingRole -> {
-                            existingRole.setRole(userRequest.getRole());
+                            existingRole.setRole(addUserRequest.getRole());
                             userRoleRepository.save(existingRole);
                         },
-                        () -> userRoleRepository.save(new UserRole(user, library, userRequest.getRole()))
+                        () -> userRoleRepository.save(new UserRole(user, library, addUserRequest.getRole()))
                 );
     }
 

@@ -14,7 +14,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @RestController
-@RequestMapping("/user") // Base path for user-related API requests
+@RequestMapping("/users") // Base path for user-related API requests
 public class UserController {
 
+    @Autowired
+    private UserService userService;
+    
+    @PostMapping("/create")
+    public ResponseEntity<String> createUser(@RequestBody UserRequestDTO userRequest) {
+        userService.createUser(userRequest);
+        return ResponseEntity.ok("User has been created");
+    }
 }
