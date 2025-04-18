@@ -33,23 +33,23 @@ public class UserRoleService {
 
     public List<User> getUsersByRole(int libraryId, Role role) {
         Library library = libraryRepository.findById(libraryId)
-                .orElseThrow(() -> new RuntimeException("Library not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Library not found"));
         return userRoleRepository.findUsersByLibraryAndRole(library, role);
     }
 
     public List<User> getUsersInLibrary(int libraryId) {
         Library library = libraryRepository.findById(libraryId)
-                .orElseThrow(() -> new RuntimeException("Library not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Library not found"));
         return userRoleRepository.findUsersInLibrary(library);
     }
 
     @Transactional
     public void addUserToLibrary(AddUserRequestDTO addUserRequest) {
         User user = userRepository.findByMail(addUserRequest.getMail())
-                .orElseThrow(() -> new RuntimeException("User not found")) ;
+                .orElseThrow(() -> new IllegalArgumentException("User not found")) ;
 
         Library library = libraryRepository.findById(addUserRequest.getLibraryId())
-                .orElseThrow(() -> new RuntimeException("Library not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Library not found"));
 
         userRoleRepository.findByUserAndLibrary(user, library)
                 .ifPresentOrElse(
@@ -64,10 +64,10 @@ public class UserRoleService {
     @Transactional
     public void removeUserFromLibrary(int libraryId, int userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Library library = libraryRepository.findById(libraryId)
-                .orElseThrow(() -> new RuntimeException("Library not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Library not found"));
 
         userRoleRepository.findByUserAndLibrary(user, library)
                 .ifPresent(userRoleRepository::delete);

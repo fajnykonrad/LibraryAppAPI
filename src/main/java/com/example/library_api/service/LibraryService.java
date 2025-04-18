@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.library_api.error.ResourceNotFoundException;
+import com.example.library_api.error.GlobalExceptionHandler;
 import com.example.library_api.model.Library;
 import com.example.library_api.model.User;
 import com.example.library_api.repository.LibraryRepository;

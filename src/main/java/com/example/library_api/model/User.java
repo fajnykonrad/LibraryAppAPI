@@ -29,6 +29,7 @@ public class User {
     
     @Column(unique = true)
     private String mail;
+    @Column(name = "password")
     private String password;
     private boolean is_deleted;
 
