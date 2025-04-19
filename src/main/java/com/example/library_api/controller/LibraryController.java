@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library_api.model.User;
-import com.example.library_api.request.UserRequestDTO;
+import com.example.library_api.request.CreateUserRequestDTO;
 import com.example.library_api.service.LibraryService;
 import com.example.library_api.service.UserService;
 

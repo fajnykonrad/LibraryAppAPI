@@ -1,6 +1,8 @@
 package com.example.library_api.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ import com.example.library_api.model.Role;
 import com.example.library_api.model.User;
 import com.example.library_api.repository.UserRepository;
 import com.example.library_api.request.AddUserRequestDTO;
-import com.example.library_api.request.UserRequestDTO;
+import com.example.library_api.request.CreateUserRequestDTO;
 import com.example.library_api.service.UserRoleService;
 import com.example.library_api.service.UserService;
 
@@ -38,9 +40,11 @@ public class UserRoleController {
     }
 
     @PostMapping("/{libraryId}/users")
-    public ResponseEntity<String> addUserToLibrary(@RequestBody AddUserRequestDTO addUserRequest) {
+    public ResponseEntity<Map<String, String>> addUserToLibrary(@RequestBody AddUserRequestDTO addUserRequest) {
         userRoleService.addUserToLibrary(addUserRequest);
-        return ResponseEntity.ok("User added successfully.");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User Added Successfully");
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{libraryId}/users/{userId}")

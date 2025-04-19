@@ -15,7 +15,7 @@ import com.example.library_api.repository.LibraryRepository;
 import com.example.library_api.repository.UserRepository;
 import com.example.library_api.repository.UserRoleRepository;
 import com.example.library_api.request.AddUserRequestDTO;
-import com.example.library_api.request.UserRequestDTO;
+import com.example.library_api.request.CreateUserRequestDTO;
 
 import jakarta.transaction.Transactional;
 
