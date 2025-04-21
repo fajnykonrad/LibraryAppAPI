@@ -21,5 +21,8 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Integer> {
     @Query("SELECT ur.user FROM UserRole ur WHERE ur.library = :library AND ur.role = :role")
     List<User> findUsersByLibraryAndRole(@Param("library") Library library, @Param("role") Role role);
 
-    Optional<UserRole> findByUserAndLibrary(User user, Library library);
+    Optional<UserRole> findRoleByUserAndLibrary(User user, Library library);
+
+    @Query("SELECT ur.library FROM UserRole ur WHERE ur.user = :user")
+    List<Library> findLibrariesByUser(@Param("user") User user);
 }

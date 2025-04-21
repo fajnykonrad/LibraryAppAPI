@@ -51,7 +51,7 @@ public class UserRoleService {
         Library library = libraryRepository.findById(addUserRequest.getLibraryId())
                 .orElseThrow(() -> new IllegalArgumentException("Library not found"));
 
-        userRoleRepository.findByUserAndLibrary(user, library)
+        userRoleRepository.findRoleByUserAndLibrary(user, library)
                 .ifPresentOrElse(
                         existingRole -> {
                             existingRole.setRole(addUserRequest.getRole());
@@ -69,7 +69,7 @@ public class UserRoleService {
         Library library = libraryRepository.findById(libraryId)
                 .orElseThrow(() -> new IllegalArgumentException("Library not found"));
 
-        userRoleRepository.findByUserAndLibrary(user, library)
+        userRoleRepository.findRoleByUserAndLibrary(user, library)
                 .ifPresent(userRoleRepository::delete);
     }
 }

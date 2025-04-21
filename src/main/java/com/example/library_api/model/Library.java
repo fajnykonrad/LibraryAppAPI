@@ -26,8 +26,6 @@ public class Library {
     private int id;
 
     private String name;
-    private boolean is_deleted;
-
 
     public Library() {}
 

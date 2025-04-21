@@ -23,7 +23,7 @@ public class UserService {
         return userRepository.existsByMail(mail);
     }
 
-    public void createUser(CreateUserRequestDTO userRequest) {
+    public int createUser(CreateUserRequestDTO userRequest) {
         if (userRequest.getUser().getName().equals("")) {
             throw new IllegalArgumentException("Name field cannot cannot be empty.");
         }
@@ -45,6 +45,7 @@ public class UserService {
         
         User user = userRequest.getUser();
         userRepository.save(user);
+        return user.getId();
         
     }
     public int login (LoginRequestDTO loginRequest) {

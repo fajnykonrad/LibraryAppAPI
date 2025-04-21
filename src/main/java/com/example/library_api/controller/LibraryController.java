@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library_api.model.User;
 import com.example.library_api.request.CreateUserRequestDTO;
+import com.example.library_api.response.LibraryRoleResponseDTO;
 import com.example.library_api.service.LibraryService;
 import com.example.library_api.service.UserService;
 
@@ -23,6 +24,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RestController
 @RequestMapping("/library")
 public class LibraryController {
+
+    @Autowired
+    private LibraryService libraryService;
+
+    @GetMapping("/user/{userId}")
+    public List<LibraryRoleResponseDTO> getLibrariesByUser(@PathVariable int userId) {    
+        return libraryService.getLibrariesByUser(userId);
+    }
     
 
 }

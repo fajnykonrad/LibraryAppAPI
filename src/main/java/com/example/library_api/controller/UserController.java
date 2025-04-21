@@ -26,10 +26,8 @@ public class UserController {
     private UserService userService;
     
     @PostMapping("/create")
-    public ResponseEntity<Map<String, String>> createUser(@RequestBody CreateUserRequestDTO userRequest) {
-        userService.createUser(userRequest);
-        
-        return ResponseEntity.ok(Map.of("message", "User created successfully"));
+    public int createUser(@RequestBody CreateUserRequestDTO userRequest) {
+        return userService.createUser(userRequest);
     }
 
     @PostMapping("/login")
