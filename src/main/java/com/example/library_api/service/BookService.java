@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.library_api.error.GlobalExceptionHandler;
+import com.example.library_api.model.Book;
 import com.example.library_api.model.Library;
 import com.example.library_api.model.Role;
 import com.example.library_api.model.User;
 import com.example.library_api.model.UserRole;
+import com.example.library_api.repository.BookRepository;
 import com.example.library_api.repository.LibraryRepository;
 import com.example.library_api.repository.UserRepository;
 import com.example.library_api.repository.UserRoleRepository;
@@ -19,30 +21,29 @@ import com.example.library_api.request.CreateUserRequestDTO;
 import com.example.library_api.response.LibraryRoleResponseDTO;
 
 @Service
-public class LibraryService {
+public class BookService {
     @Autowired
     private LibraryRepository libraryRepository;
 
     @Autowired
-    private UserRoleRepository userRoleRepository;
+    private BookRepository bookRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    public List<LibraryRoleResponseDTO> getLibrariesByUser (int userId) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public List<Book> getBooksByLibrary (int libraryId) {
+        Library library = libraryRepository.findById(libraryId)
+            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+        return bookRepository.findBooksByLibrary(library);
+    }
 
-        List<Library> libraries = new ArrayList<>(userRoleRepository.findLibrariesByUser(user));
-        
-        List<LibraryRoleResponseDTO> LibrariesAndRoles = new ArrayList<>();
+    @Transactional
 
-        for(Library library : libraries) {
-            UserRole userRole = userRoleRepository.findRoleByUserAndLibrary(user, library)
-                .orElseThrow(() -> new IllegalArgumentException("User not in library"));
-            LibraryRoleResponseDTO libraryAndRole = new LibraryRoleResponseDTO(library, userRole.getRole());
-            LibrariesAndRoles.add(libraryAndRole);
-        }
-        return LibrariesAndRoles;
+    public void saveBook (Book book, int libraryId) {
+        Library library = libraryRepository.findById(libraryId)
+            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+
+        book.setLibrary(library);
+        bookRepository.save(book);
     }
 }
