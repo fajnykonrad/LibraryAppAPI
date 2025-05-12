@@ -30,6 +30,7 @@ public class UserRole {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private int penalties;
     // Constructors, Getters, and Setters
     public UserRole() {}
 
@@ -44,4 +45,6 @@ public class UserRole {
     public Library getLibrary() { return library; }
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
+    public int getPenalties() { return penalties; }
+    public void addPenalty() { penalties++; }
 }
