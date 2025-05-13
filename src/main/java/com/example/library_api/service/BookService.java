@@ -66,4 +66,20 @@ public class BookService {
         book.setLibrary(library);
         bookRepository.save(book);
     }
+
+    public Book getBookById (int libraryId, int bookId) {
+        Library library = libraryRepository.findById(libraryId)
+            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+        Book book = bookRepository.findById(bookId)
+            .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+        if(book.getLibrary() != library) {
+            throw new IllegalArgumentException("Book not in the same library");
+        }
+        Rental rental = rentalRepository.findCurrentRentalByBook(book)
+            .orElse(null);
+        if(rental != null) {
+            throw new IllegalArgumentException("Book is currently rented");
+        }
+        return book;
+    }
 }

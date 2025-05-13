@@ -9,16 +9,20 @@ public class ReturnBookRequestDTO {
     
     private int rentalId;
     private String bookCondition;
+    private boolean isDamaged;
 
     // Constructors
     public ReturnBookRequestDTO() {}    
-    public ReturnBookRequestDTO(int rentalId, String bookCondition) {
+    public ReturnBookRequestDTO(int rentalId, String bookCondition, boolean isDamaged) {
         this.rentalId = rentalId;
         this.bookCondition = bookCondition;
+        this.isDamaged = isDamaged;
     }
 
     public int getRentalId() { return rentalId; }
     public void setRentalId(int rentalId) { this.rentalId = rentalId; }
     public String getBookCondition() { return bookCondition; }
     public void setBookCondition(String bookCondition) { this.bookCondition = bookCondition;}
+    public boolean isDamaged() { return isDamaged; }
+    public void setDamaged(boolean isDamaged) { this.isDamaged = isDamaged;}
 }

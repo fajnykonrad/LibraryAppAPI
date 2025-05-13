@@ -40,10 +40,10 @@ public class Rental {
     private User supervisor;
 
     @Column(name = "rental_date")
-    private Date rentalDate;
+    private Date rentalDate = new Date(System.currentTimeMillis());
     @Column(name = "due_date")
     private Date dueDate;
-    private Boolean returned;
+    private Boolean returned = false;
 
     public Rental() {}
 

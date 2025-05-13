@@ -45,5 +45,9 @@ public class BookController {
         response.put("message", "User Added Successfully");
         return ResponseEntity.ok(response);
     } 
+    @GetMapping("/{libraryId}/books/{bookId}")
+    public Book getBookById(@PathVariable int libraryId, @PathVariable int bookId) {   
+        return bookService.getBookById(libraryId, bookId);
+    }
 
 }
