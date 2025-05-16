@@ -46,7 +46,7 @@ public class BookController {
         return ResponseEntity.ok(response);
     } 
     @GetMapping("/{libraryId}/books/{bookId}")
-    public Book getBookById(@PathVariable int libraryId, @PathVariable int bookId) {   
+    public BookListResponseDTO getBookById(@PathVariable int libraryId, @PathVariable int bookId) {   
         return bookService.getBookById(libraryId, bookId);
     }
 

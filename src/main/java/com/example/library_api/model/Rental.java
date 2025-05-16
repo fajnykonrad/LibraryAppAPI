@@ -43,6 +43,8 @@ public class Rental {
     private Date rentalDate = new Date(System.currentTimeMillis());
     @Column(name = "due_date")
     private Date dueDate;
+    @Column(name = "is_damaged")
+    private Boolean isDamaged;
     private Boolean returned = false;
 
     public Rental() {}
@@ -67,4 +69,6 @@ public class Rental {
     public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
     public Boolean getReturned() {return returned;}
     public void setReturned(Boolean returned) {this.returned = returned;}
+    public Boolean getIsDamaged() {return isDamaged;}
+    public void setIsDamaged(Boolean isDamaged) {this.isDamaged = isDamaged;}
 }

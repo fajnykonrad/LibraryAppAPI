@@ -31,87 +31,88 @@ import jakarta.transaction.Transactional;
 @Service
 public class RentalService {
 
-    @Autowired
-    private RentalRepository rentalRepository;
+        @Autowired
+        private RentalRepository rentalRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserRepository userRepository;
 
-    @Autowired
-    private UserRoleRepository userRoleRepository;
+        @Autowired
+        private UserRoleRepository userRoleRepository;
 
-    @Autowired
-    private BookRepository bookRepository;
+        @Autowired
+        private BookRepository bookRepository;
 
-    @Autowired
-    private LibraryRepository libraryRepository;
+        @Autowired
+        private LibraryRepository libraryRepository;
 
-    public void rentBook(RentBookRequestDTO rentBookRequest) {
-        Book book = bookRepository.findById(rentBookRequest.getBookId())
-                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
-        if(rentalRepository.findIfBookRented(book).isPresent()) {
-                throw new IllegalArgumentException("Book already rented");
+        public void rentBook(RentBookRequestDTO rentBookRequest) {
+                Book book = bookRepository.findById(rentBookRequest.getBookId())
+                                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+                if (rentalRepository.findCurrentRentalByBook(book).isPresent()) {
+                        throw new IllegalArgumentException("Book already rented");
+                }
+                User member = userRepository.findByMail(rentBookRequest.getMemberMail())
+                                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+                User supervisor = userRepository.findById(rentBookRequest.getSupervisorId())
+                                .orElseThrow(() -> new IllegalArgumentException("Supervisor not found"));
+
+                if (rentalRepository.findCurrentRentalByBook(book).isPresent()) {
+                        throw new IllegalArgumentException("Book already rented");
+                }
+                if (!userRoleRepository.findRoleByUserAndLibrary(member, book.getLibrary()).isPresent()) {
+                        throw new IllegalArgumentException("Member not in the same library as book");
+                }
+                if (!userRoleRepository.findRoleByUserAndLibrary(supervisor, book.getLibrary()).isPresent()) {
+                        throw new IllegalArgumentException("Supervisor not in the same library as book");
+                }
+
+                Rental rental = new Rental(book, member, supervisor, rentBookRequest.getDueDate());
+                rentalRepository.save(rental);
         }
-        User member = userRepository.findByMail(rentBookRequest.getMemberMail())
-                .orElseThrow(()-> new IllegalArgumentException("Member not found"));
-        User supervisor = userRepository.findById(rentBookRequest.getSupervisorId())
-                .orElseThrow(()-> new IllegalArgumentException("Supervisor not found"));
-        
-        if(rentalRepository.findCurrentRentalByBook(book).isPresent()) {
-                throw new IllegalArgumentException("Book already rented");
+
+        public List<Rental> getRentalsByMember(int memberId) {
+                User member = userRepository.findById(memberId)
+                                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+                return rentalRepository.findRentalsByMember(member);
         }
-        if(!userRoleRepository.findRoleByUserAndLibrary(member, book.getLibrary()).isPresent()) {
-                throw new IllegalArgumentException("Member not in the same library as book");
+
+        public List<Rental> getRentalsBySupervisor(int supervisorId) {
+                User supervisor = userRepository.findById(supervisorId)
+                                .orElseThrow(() -> new IllegalArgumentException("Supervisor not found"));
+                return rentalRepository.findRentalsBySupervisor(supervisor);
         }
-        if(!userRoleRepository.findRoleByUserAndLibrary(supervisor, book.getLibrary()).isPresent()) {
-                throw new IllegalArgumentException("Supervisor not in the same library as book");
+
+        public List<BookListResponseDTO> getRentalsByLibrary(int libraryId) {
+
+                Library library = libraryRepository.findById(libraryId)
+                                .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+                List<Rental> rentals = rentalRepository.findRentalsByLibrary(library);
+                List<BookListResponseDTO> bookList = new ArrayList<>();
+                for (Rental rental : rentals) {
+                        Book book = rental.getBook();
+                        BookListResponseDTO bookResponse = new BookListResponseDTO(book, rental);
+                        bookList.add(bookResponse);
+                }
+                return bookList;
+
         }
-        
-        Rental rental = new Rental(book, member, supervisor, rentBookRequest.getDueDate());
-        rentalRepository.save(rental);
-    }
 
-    public List<Rental> getRentalsByMember(int memberId) {
-            User member = userRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
-            return rentalRepository.findRentalsByMember(member);
-    }
-
-    public List<Rental> getRentalsBySupervisor(int supervisorId) {
-            User supervisor = userRepository.findById(supervisorId)
-                .orElseThrow(() -> new IllegalArgumentException("Supervisor not found"));
-            return rentalRepository.findRentalsBySupervisor(supervisor);
-    }
-
-    public List<BookListResponseDTO> getRentalsByLibrary(int libraryId) {
-
-            Library library = libraryRepository.findById(libraryId)
-                .orElseThrow(() -> new IllegalArgumentException("Library not found"));
-            List<Rental> rentals = rentalRepository.findRentalsByLibrary(library);
-            List<BookListResponseDTO> bookList = new ArrayList<>();
-            for (Rental rental : rentals) {
-                    Book book = rental.getBook();
-                    BookListResponseDTO bookResponse = new BookListResponseDTO(book, rental);
-                    bookList.add(bookResponse);
-            }
-            return bookList;
-
-    }
-
-    
-    public void returnBook(ReturnBookRequestDTO returnBookRequest) {
-            Rental rental = rentalRepository.findById(returnBookRequest.getRentalId())
-                .orElseThrow(() -> new IllegalArgumentException("Rental not found"));
-            rental.getBook().setBookCondition(returnBookRequest.getBookCondition());
-            // Apply penalty if the book is damaged or returned late
-            if (rental.getDueDate().before(new Date(System.currentTimeMillis())) || returnBookRequest.isDamaged()) {
-                    UserRole userRole = userRoleRepository
-                        .findRoleByUserAndLibrary(rental.getMember(), rental.getBook().getLibrary())
-                        .orElseThrow(() -> new IllegalArgumentException("Member not in the same library as book"));
-                    userRole.addPenalty();
-            }
-        
-            rental.setReturned(true);
-            rentalRepository.save(rental);
-    }
+        public void returnBook(ReturnBookRequestDTO returnBookRequest) {
+                Rental rental = rentalRepository.findById(returnBookRequest.getRentalId())
+                                .orElseThrow(() -> new IllegalArgumentException("Rental not found"));
+                rental.getBook().setBookCondition(returnBookRequest.getBookCondition());
+                // Apply penalty if the book is damaged or returned late
+                if (rental.getDueDate().before(new Date(System.currentTimeMillis())) || returnBookRequest.isDamaged()) {
+                        UserRole userRole = userRoleRepository
+                                        .findRoleByUserAndLibrary(rental.getMember(), rental.getBook().getLibrary())
+                                        .orElseThrow(() -> new IllegalArgumentException("Member not in the same library as book"));
+                        userRole.addPenalty();
+                }
+                if (returnBookRequest.isDamaged()) {
+                        rental.setIsDamaged(true);
+                }
+                rental.setReturned(true);
+                rentalRepository.save(rental);
+        }
 }

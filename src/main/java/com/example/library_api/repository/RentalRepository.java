@@ -15,8 +15,6 @@ import java.util.Optional;
 
 @Repository
 public interface RentalRepository extends JpaRepository<Rental, Integer> {
-    @Query("SELECT r FROM Rental r WHERE r.book = :book AND r.returned = true")
-    Optional<Rental> findIfBookRented(@Param("book") Book book);
     List<Rental> findRentalsByMember(User member);
     List<Rental> findRentalsBySupervisor(User supervisor);
     

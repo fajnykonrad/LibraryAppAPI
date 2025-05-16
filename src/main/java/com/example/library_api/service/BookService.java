@@ -67,7 +67,7 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    public Book getBookById (int libraryId, int bookId) {
+    public BookListResponseDTO getBookById (int libraryId, int bookId) {
         Library library = libraryRepository.findById(libraryId)
             .orElseThrow(() -> new IllegalArgumentException("Library not found"));
         Book book = bookRepository.findById(bookId)
@@ -77,9 +77,13 @@ public class BookService {
         }
         Rental rental = rentalRepository.findCurrentRentalByBook(book)
             .orElse(null);
+        BookListResponseDTO bookDTO;
         if(rental != null) {
-            throw new IllegalArgumentException("Book is currently rented");
+            bookDTO = new BookListResponseDTO(book, rental);
         }
-        return book;
+        else {
+            bookDTO = new BookListResponseDTO(book);
+        }
+        return bookDTO;
     }
 }

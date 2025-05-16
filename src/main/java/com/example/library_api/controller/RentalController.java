@@ -49,7 +49,7 @@ public class RentalController {
         response.put("message", "Book Rented Successfully");
         return ResponseEntity.ok(response);
     } 
-    @DeleteMapping("/{libraryId}/rentals/") 
+    @PostMapping("/{libraryId}/returns") 
     public ResponseEntity<Map<String, String>> returnRental(@PathVariable int libraryId, @RequestBody ReturnBookRequestDTO returnRequest) {
         rentalService.returnBook(returnRequest);
         Map<String, String> response = new HashMap<>();
