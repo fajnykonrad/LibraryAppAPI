@@ -15,6 +15,7 @@ import com.example.library_api.model.UserRole;
 import com.example.library_api.repository.LibraryRepository;
 import com.example.library_api.repository.UserRepository;
 import com.example.library_api.repository.UserRoleRepository;
+import com.example.library_api.request.CreateLibraryRequestDTO;
 import com.example.library_api.request.CreateUserRequestDTO;
 import com.example.library_api.response.LibraryRoleResponseDTO;
 
@@ -44,5 +45,57 @@ public class LibraryService {
             LibrariesAndRoles.add(libraryAndRole);
         }
         return LibrariesAndRoles;
+    }
+
+    public void createLibrary(CreateLibraryRequestDTO createLibraryRequest) {
+        if (createLibraryRequest.getName().isEmpty()) {
+            throw new IllegalArgumentException("Library name cannot be empty");
+        }
+        String code = generateCode();
+        Library library = new Library(createLibraryRequest.getName(), code);
+        libraryRepository.save(library);
+        Library savedLibrary = libraryRepository.findByCode(code)
+            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+        User user = userRepository.findById(createLibraryRequest.getUserId())
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        UserRole userRole = new UserRole(user, savedLibrary, Role.SUPERVISOR);
+        userRoleRepository.save(userRole);
+    }
+
+    @Transactional
+    public void joinLibraryByCode(CreateLibraryRequestDTO createLibraryRequest) {
+        String code = createLibraryRequest.getName();
+        if (code.isEmpty()) {
+            throw new IllegalArgumentException("Library code cannot be empty");
+        }
+        Library library = libraryRepository.findByCode(code)
+            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+        User user = userRepository.findById(createLibraryRequest.getUserId())
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (userRoleRepository.findRoleByUserAndLibrary(user, library).isPresent()) {
+            throw new IllegalArgumentException("User already in library");
+        }
+        userRepository.save(user);
+        UserRole userRole = new UserRole(user, library, Role.MEMBER);
+        userRoleRepository.save(userRole);  
+    }
+    public Library getLibraryById(int libraryId) {
+        return libraryRepository.findById(libraryId)
+            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+    }    
+
+    private String generateCode() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        while(true) {
+           StringBuilder code = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            int randomIndex = (int) (Math.random() * chars.length());
+            code.append(chars.charAt(randomIndex));
+        }
+        if(!libraryRepository.findByCode(code.toString()).isPresent()) {
+            return code.toString();
+        }
+        }
+        
     }
 }
