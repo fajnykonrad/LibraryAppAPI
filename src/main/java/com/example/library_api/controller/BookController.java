@@ -39,15 +39,20 @@ public class BookController {
     }
 
     @PostMapping("/{libraryId}/books")
-    public ResponseEntity<Map<String, String>> saveBook(@PathVariable int libraryId, @RequestBody Book book) {   
-        bookService.saveBook(book, libraryId);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "User Added Successfully");
-        return ResponseEntity.ok(response);
+    public int saveBook(@PathVariable int libraryId, @RequestBody Book book) {   
+        return bookService.saveBook(book, libraryId);
     } 
     @GetMapping("/{libraryId}/books/{bookId}")
     public BookListResponseDTO getBookById(@PathVariable int libraryId, @PathVariable int bookId) {   
         return bookService.getBookById(libraryId, bookId);
+    }
+
+    @DeleteMapping("/{libraryId}/books/{bookId}")
+    public ResponseEntity<Map<String, String>> deleteBook(@PathVariable int libraryId, @PathVariable int bookId) {
+        bookService.deleteBook(libraryId ,bookId);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Book deleted successfully");
+        return ResponseEntity.ok(response);
     }
 
 }

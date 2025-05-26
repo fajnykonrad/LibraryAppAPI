@@ -59,12 +59,15 @@ public class BookService {
 
     @Transactional
 
-    public void saveBook (Book book, int libraryId) {
+    public int saveBook (Book book, int libraryId) {
         Library library = libraryRepository.findById(libraryId)
             .orElseThrow(() -> new IllegalArgumentException("Library not found"));
-
+        if (book.getIsbn().isEmpty()) {
+            throw new IllegalArgumentException("The book cannot have an empty ISBN");
+        }
         book.setLibrary(library);
         bookRepository.save(book);
+        return book.getId();
     }
 
     public BookListResponseDTO getBookById (int libraryId, int bookId) {
@@ -85,5 +88,12 @@ public class BookService {
             bookDTO = new BookListResponseDTO(book);
         }
         return bookDTO;
+    }
+
+    public void deleteBook(int libraryId, int bookId) {
+        Book book = bookRepository.findById(bookId)
+            .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+        book.setIsDeleted(true);
+        bookRepository.save(book);
     }
 }

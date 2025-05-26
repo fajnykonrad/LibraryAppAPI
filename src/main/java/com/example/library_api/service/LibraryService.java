@@ -12,6 +12,7 @@ import com.example.library_api.model.Library;
 import com.example.library_api.model.Role;
 import com.example.library_api.model.User;
 import com.example.library_api.model.UserRole;
+import com.example.library_api.repository.BookRepository;
 import com.example.library_api.repository.LibraryRepository;
 import com.example.library_api.repository.UserRepository;
 import com.example.library_api.repository.UserRoleRepository;
@@ -28,6 +29,9 @@ public class LibraryService {
     private UserRoleRepository userRoleRepository;
 
     @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     public List<LibraryRoleResponseDTO> getLibrariesByUser (int userId) {
@@ -41,7 +45,8 @@ public class LibraryService {
         for(Library library : libraries) {
             UserRole userRole = userRoleRepository.findRoleByUserAndLibrary(user, library)
                 .orElseThrow(() -> new IllegalArgumentException("User not in library"));
-            LibraryRoleResponseDTO libraryAndRole = new LibraryRoleResponseDTO(library, userRole.getRole());
+            int bookCount = bookRepository.countBooksInLibrary(library);
+            LibraryRoleResponseDTO libraryAndRole = new LibraryRoleResponseDTO(library, userRole.getRole(), bookCount);
             LibrariesAndRoles.add(libraryAndRole);
         }
         return LibrariesAndRoles;
@@ -85,17 +90,21 @@ public class LibraryService {
     }    
 
     private String generateCode() {
+        // Caracteres posibles para el código
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         while(true) {
-           StringBuilder code = new StringBuilder();
+        // Generar un código aleatorio de 6 caracteres
+        StringBuilder code = new StringBuilder();
         for (int i = 0; i < 6; i++) {
+            // Generar un índice aleatorio para seleccionar un carácter
             int randomIndex = (int) (Math.random() * chars.length());
+            // Agregar el carácter al código
             code.append(chars.charAt(randomIndex));
         }
+        // Verificar si el código ya existe en la base de datos
         if(!libraryRepository.findByCode(code.toString()).isPresent()) {
             return code.toString();
         }
-        }
-        
+        }    
     }
 }
