@@ -102,16 +102,15 @@ public class RentalService {
                 Rental rental = rentalRepository.findById(returnBookRequest.getRentalId())
                                 .orElseThrow(() -> new IllegalArgumentException("Rental not found"));
                 rental.getBook().setBookCondition(returnBookRequest.getBookCondition());
+                System.out.println("Book condition: " + returnBookRequest);
                 // Apply penalty if the book is damaged or returned late
-                if (rental.getDueDate().before(new Date(System.currentTimeMillis())) || returnBookRequest.isDamaged()) {
+                if (rental.getDueDate().before(new Date(System.currentTimeMillis())) || returnBookRequest.getIsDamaged()) {
                         UserRole userRole = userRoleRepository
                                         .findRoleByUserAndLibrary(rental.getMember(), rental.getBook().getLibrary())
                                         .orElseThrow(() -> new IllegalArgumentException("Member not in the same library as book"));
                         userRole.addPenalty();
                 }
-                if (returnBookRequest.isDamaged()) {
-                        rental.setIsDamaged(true);
-                }
+                rental.setIsDamaged(returnBookRequest.getIsDamaged());
                 rental.setReturned(true);
                 rentalRepository.save(rental);
         }

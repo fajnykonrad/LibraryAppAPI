@@ -23,6 +23,6 @@ public class ReturnBookRequestDTO {
     public void setRentalId(int rentalId) { this.rentalId = rentalId; }
     public String getBookCondition() { return bookCondition; }
     public void setBookCondition(String bookCondition) { this.bookCondition = bookCondition;}
-    public boolean isDamaged() { return isDamaged; }
-    public void setDamaged(boolean isDamaged) { this.isDamaged = isDamaged;}
+    public boolean getIsDamaged() { return isDamaged; }
+    public void setIsDamaged(boolean isDamaged) { this.isDamaged = isDamaged;}
 }

@@ -43,8 +43,10 @@ public class Rental {
     private Date rentalDate = new Date(System.currentTimeMillis());
     @Column(name = "due_date")
     private Date dueDate;
-    @Column(name = "is_damaged")
-    private Boolean isDamaged;
+
+    @Column(name = "is_damaged", nullable = true)
+    private Boolean isDamaged = false;
+
     private Boolean returned = false;
 
     public Rental() {}
