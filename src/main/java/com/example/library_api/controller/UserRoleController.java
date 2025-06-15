@@ -20,6 +20,7 @@ import com.example.library_api.model.User;
 import com.example.library_api.repository.UserRepository;
 import com.example.library_api.request.AddUserRequestDTO;
 import com.example.library_api.request.CreateUserRequestDTO;
+import com.example.library_api.response.UserListResponseDTO;
 import com.example.library_api.service.UserRoleService;
 import com.example.library_api.service.UserService;
 
@@ -34,8 +35,8 @@ public class UserRoleController {
     private UserRoleService userRoleService;
 
     @GetMapping("/{libraryId}/users/{userRole}")
-    public ResponseEntity<List<User>> getUsers(@PathVariable int libraryId, @PathVariable Role userRole) {
-        List<User> users = userRoleService.getUsersByRole(libraryId, userRole);
+    public ResponseEntity<List<UserListResponseDTO>> getUsers(@PathVariable int libraryId, @PathVariable Role userRole) {
+        List<UserListResponseDTO> users = userRoleService.getUsersByRole(libraryId, userRole);
         return ResponseEntity.ok(users);
     }
 

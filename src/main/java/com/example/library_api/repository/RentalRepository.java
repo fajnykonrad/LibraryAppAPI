@@ -23,4 +23,9 @@ public interface RentalRepository extends JpaRepository<Rental, Integer> {
 
     @Query("SELECT r FROM Rental r WHERE r.book = :book AND r.returned = false")
     Optional<Rental> findCurrentRentalByBook(@Param("book") Book book);
+    @Query("SELECT r FROM Rental r WHERE r.member = :member AND r.book.library = :library AND r.returned = false ORDER BY r.rentalDate DESC")
+    List<Rental> findCurrentRentalsByMemberAndLibrary(@Param("member") User member, @Param("library") Library library, org.springframework.data.domain.Pageable pageable);
+
+    @Query("SELECT r FROM Rental r WHERE r.member = :member AND r.book.library = :library AND r.returned = true ORDER BY r.rentalDate DESC")
+    List<Rental> findPastRentalsByMemberAndLibrary(@Param("member") User member, @Param("library") Library library, org.springframework.data.domain.Pageable pageable);
 }

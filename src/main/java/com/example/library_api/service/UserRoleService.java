@@ -1,21 +1,26 @@
 package com.example.library_api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.library_api.model.Library;
+import com.example.library_api.model.Rental;
 import com.example.library_api.model.Role;
 import com.example.library_api.model.User;
 import com.example.library_api.model.UserRole;
 import com.example.library_api.repository.LibraryRepository;
+import com.example.library_api.repository.RentalRepository;
 import com.example.library_api.repository.UserRepository;
 import com.example.library_api.repository.UserRoleRepository;
 import com.example.library_api.request.AddUserRequestDTO;
 import com.example.library_api.request.CreateUserRequestDTO;
+import com.example.library_api.response.UserListResponseDTO;
 
 import jakarta.transaction.Transactional;
 
@@ -31,16 +36,38 @@ public class UserRoleService {
     @Autowired
     private LibraryRepository libraryRepository;
 
-    public List<User> getUsersByRole(int libraryId, Role role) {
+    
+    @Autowired
+    private RentalRepository rentalRepository;
+
+    public List<UserListResponseDTO> getUsersByRole(int libraryId, Role role) {
         Library library = libraryRepository.findById(libraryId)
                 .orElseThrow(() -> new IllegalArgumentException("Library not found"));
-        return userRoleRepository.findUsersByLibraryAndRole(library, role);
+        List<User> users = userRoleRepository.findUsersByLibraryAndRole(library, role);
+        List<UserListResponseDTO> userList = new ArrayList<>();
+        for (User user : users) {
+                PageRequest pageRequest = PageRequest.of(0, 5);
+                List<Rental> currentRentals = rentalRepository.findCurrentRentalsByMemberAndLibrary(user, library, pageRequest);
+                List<Rental> pastRentals = rentalRepository.findPastRentalsByMemberAndLibrary(user, library, pageRequest);
+                UserListResponseDTO userDTO = new UserListResponseDTO(user, currentRentals, pastRentals);       
+                userList.add(userDTO);
+        }
+        return userList;
     }
 
-    public List<User> getUsersInLibrary(int libraryId) {
+    public List<UserListResponseDTO> getUsersInLibrary(int libraryId) {
         Library library = libraryRepository.findById(libraryId)
                 .orElseThrow(() -> new IllegalArgumentException("Library not found"));
-        return userRoleRepository.findUsersInLibrary(library);
+        List<User> users = userRoleRepository.findUsersInLibrary(library);
+        List<UserListResponseDTO> userList = new ArrayList<>();
+        for (User user : users) {
+                PageRequest pageRequest = PageRequest.of(0, 5);
+                List<Rental> currentRentals = rentalRepository.findCurrentRentalsByMemberAndLibrary(user, library, pageRequest);
+                List<Rental> pastRentals = rentalRepository.findPastRentalsByMemberAndLibrary(user, library, pageRequest);
+                UserListResponseDTO userDTO = new UserListResponseDTO(user, currentRentals, pastRentals);       
+                userList.add(userDTO);
+        }
+        return userList;
     }
 
     @Transactional
